@@ -1,5 +1,6 @@
 import turtle
 import random
+import math
 
 
 def stop():
@@ -58,19 +59,29 @@ def draw_line(p1, p2):
     x1, y1 = p1[0],p1[1]
     x2, y2 = p2[0],p2[1]
 
-    for i in range (0, 100 + 1, 4):
-        t = i / 100
-        x = (1-t)*x1 + t*x2
-        y = (1-t)*y1 + t*y2
+    for i in range (0, 100, 10): # range 는 정수밖에 들어가지 않기 때문에
+        t = i / 100 # t는 0부터 1까지이다
+        # x = 100 * (1-t**2)/(1+t**2)
+        # y = 100 * 2*t/(1+t**2)
+        x = t*x1 + (1-t)*x2
+        y = t*y1 + (1-t)*y2
         draw_point((x,y))
 
-    draw_point((x2,y2)) # 마지막에도 점을 정확하게 찍기 위해서
+    draw_point((x1,y1)) # 마지막에도 점을 정확하게 찍기 위해서
 
 prepare_turtle_canvas()
 
 
 # fill here
-draw_line((-100, -100), (300, 150))
-draw_line((-100, -100), (-100, 300))
+# points = [(-300, 200),(400, 350),(300, -300), (-200, -200)]
+points = [(random.randint(-300, 300), random.randint(-300, 300)) for i in range(10)]
+# 10개의 random list
+
+for p in points:
+    draw_big_point(p)
+
+for i in range(0, len(points)-1):
+    draw_line(points[i], points[i+1])
+draw_line(points[-1], points[0]) # 마지막 점과 처음 점을 이어준다
 
 turtle.done()
