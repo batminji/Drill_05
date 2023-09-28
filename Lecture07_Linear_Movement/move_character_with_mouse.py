@@ -22,31 +22,40 @@ def handle_events():
 
 can_make = True
 def produce_hand():
-    global hand_x, hand_y, can_make
-    if can_make:
-        hand_x = random.randint(0,TUK_WIDTH)
-        hand_y = random.randint(0, TUK_HEIGHT)
-        can_make = False
-    elif not can_make:
-        pass
+    global hand_x, hand_y
+    hand_x = random.randint(0,TUK_WIDTH)
+    hand_y = random.randint(0, TUK_HEIGHT)
 
+def move_keroro(keroro_x, keroro_y, hand_x, hand_y):
+    frame = 0
+    for i in range(0, 100 + 1, 4):
+        clear_canvas()
+        TUK_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
+        hand.draw(hand_x, hand_y)
+        t = i / 100
+        x = (1 - t) * keroro_x + t * hand_x
+        y = (1 - t) * keroro_y + t * hand_y
+        if hand_x > keroro_x:
+            keroro_right.clip_draw(frame * 250, 0, 250, 345, x, y, 125, 160)
+        elif hand_x < keroro_x:
+            keroro_left.clip_draw(frame * 250, 0, 250, 345, x, y, 125, 160)
+        update_canvas()
+        frame = (frame + 1) % 4
+        delay(0.08)
 
 running = True
-x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
-frame = 0
+keroro_x, keroro_y = TUK_WIDTH // 2, TUK_HEIGHT // 2
 hide_cursor()
+produce_hand()
 
 while running:
-    clear_canvas()
-    TUK_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
-
-    produce_hand()
-    hand.draw(hand_x, hand_y)
-
-    update_canvas()
-    frame = (frame + 1) % 8
+    if keroro_x == hand_x and keroro_y == hand_y:
+        produce_hand()
+    else :
+        move_keroro(keroro_x, keroro_y, hand_x, hand_y)
+        keroro_x, keroro_y = hand_x, hand_y
     handle_events()
-    delay(0.05)
+
 
 close_canvas()
 
