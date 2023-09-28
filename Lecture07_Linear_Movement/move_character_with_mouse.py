@@ -63,9 +63,4 @@ while running:
         keroro_x, keroro_y = hand_x, hand_y
     handle_events()
 
-
 close_canvas()
-
-
-
-
